@@ -8,7 +8,7 @@ function App() {
 
   async function generate() {
     setLoading(true)
-    const response = await fetch("http://localhost:8000/generate", {
+    const response = await fetch("http://study-assistant-production-fd84.up.railway.app/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ notes }),
@@ -25,7 +25,7 @@ function App() {
     setLoading(true)
     const formData = new FormData()
     formData.append("file", file)
-    const response = await fetch("http://localhost:8000/upload-pdf", {
+    const response = await fetch("http://study-assistant-production-fd84.up.railway.app/upload-pdf", {
       method: "POST",
       body: formData,
     })
