@@ -8,7 +8,7 @@ function App() {
 
   async function generate() {
     setLoading(true)
-    const response = await fetch("https://study-assistant-production-fd84.up.railway.app/generate", {
+    const response = await fetch("https://study-assistant-4oz8.onrender.com/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ notes }),
@@ -25,7 +25,7 @@ function App() {
     setLoading(true)
     const formData = new FormData()
     formData.append("file", file)
-    const response = await fetch("https://study-assistant-production-fd84.up.railway.app/upload-pdf", {
+    const response = await fetch("https://study-assistant-4oz8.onrender.com/upload-pdf", {
       method: "POST",
       body: formData,
     })
