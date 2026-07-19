@@ -44,7 +44,7 @@ Notes: {input.notes}"""
 
     # 2. FIX: Force the native Gemini SDK to return clean, valid JSON structures
     response = client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-1.5-flash",
         contents=prompt,
         config=types.GenerateContentConfig(
             response_mime_type="application/json",
@@ -67,7 +67,7 @@ Notes: {text[:3000]}"""
 
     # 2. FIX: Apply clean structured configuration to the PDF endpoint as well
     response = client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-1.5-flash",
         contents=prompt,
         config=types.GenerateContentConfig(
             response_mime_type="application/json",
