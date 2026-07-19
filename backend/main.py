@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 import json
 import pypdf
 import io
+from typing import List
 
 load_dotenv() # loads and opens .env file
 
@@ -32,6 +33,14 @@ app.add_middleware(
     allow_headers=["*"], 
 )
 
+# Define the structural schema objects
+class Flashcard(BaseModel):
+    question: str
+    answer: str
+
+class FlashcardResponse(BaseModel):
+    flashcards: List[Flashcard]
+
 class NotesInput(BaseModel): 
     notes: str 
 
@@ -42,12 +51,13 @@ Format: {{"flashcards": [{{"question": "...", "answer": "..."}}]}}
 
 Notes: {input.notes}"""
 
-    # 2. FIX: Force the native Gemini SDK to return clean, valid JSON structures
+    # 2. FIX: Force the native Gemini SDK to return clean, valid JSON structures matching our Pydantic schema
     response = client.models.generate_content(
         model="gemini-3.5-flash",
         contents=prompt,
         config=types.GenerateContentConfig(
             response_mime_type="application/json",
+            response_schema=FlashcardResponse,
         ),
     )
     return json.loads(response.text)
@@ -71,6 +81,7 @@ Notes: {text[:3000]}"""
         contents=prompt,
         config=types.GenerateContentConfig(
             response_mime_type="application/json",
+            response_schema=FlashcardResponse,
         ),
     )
     return json.loads(response.text)
