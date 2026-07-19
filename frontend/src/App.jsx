@@ -8,31 +8,60 @@ function App() {
 
   async function generate() {
     setLoading(true)
-    const response = await fetch("https://study-assistant-4oz8.onrender.com/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ notes }),
-    })
-    const data = await response.json()
-    setFlashcards(data.flashcards)
-    setFlipped({})
-    setLoading(false)
+    try {
+      const response = await fetch("https://study-assistant-4oz8.onrender.com/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ notes }),
+      })
+      const data = await response.json()
+      console.log("Backend Response Data:", data) // See exactly what the model returned
+
+      // Handle both object wrapper and raw array formats safely
+      if (data && data.flashcards && Array.isArray(data.flashcards)) {
+        setFlashcards(data.flashcards)
+      } else if (Array.isArray(data)) {
+        setFlashcards(data)
+      } else {
+        console.error("Unexpected data format structure:", data)
+        setFlashcards([])
+      }
+    } catch (err) {
+      console.error("Frontend fetch error:", err)
+    } finally {
+      setFlipped({})
+      setLoading(false)
+    }
   }
 
   async function uploadPDF(e) {
     const file = e.target.files[0]
     if (!file) return
     setLoading(true)
-    const formData = new FormData()
-    formData.append("file", file)
-    const response = await fetch("https://study-assistant-4oz8.onrender.com/upload-pdf", {
-      method: "POST",
-      body: formData,
-    })
-    const data = await response.json()
-    setFlashcards(data.flashcards)
-    setFlipped({})
-    setLoading(false)
+    try {
+      const formData = new FormData()
+      formData.append("file", file)
+      const response = await fetch("https://study-assistant-4oz8.onrender.com/upload-pdf", {
+        method: "POST",
+        body: formData,
+      })
+      const data = await response.json()
+      console.log("Backend PDF Response Data:", data)
+
+      if (data && data.flashcards && Array.isArray(data.flashcards)) {
+        setFlashcards(data.flashcards)
+      } else if (Array.isArray(data)) {
+        setFlashcards(data)
+      } else {
+        console.error("Unexpected data format structure:", data)
+        setFlashcards([])
+      }
+    } catch (err) {
+      console.error("Frontend PDF fetch error:", err)
+    } finally {
+      setFlipped({})
+      setLoading(false)
+    }
   }
 
   function toggleFlip(i) {
